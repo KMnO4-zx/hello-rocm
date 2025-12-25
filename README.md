@@ -1,0 +1,2 @@
+# hello-rocm
+AMD YES!
