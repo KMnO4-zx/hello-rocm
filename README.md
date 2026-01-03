@@ -104,6 +104,25 @@ hello-rocm/
 
 **查看项目** → [AMD-YES Project Gallery](./04-AMD-YES/README.md)
 
+
+### 05. AMD-YES Pipeline - 产线全流程
+<table align="center">
+  <tr>
+    <td valign="top" width="50%">
+      <b>核心内容</b><br>
+      • 模型快速体验<br>
+      • 模型数据准备<br>
+      • 模型模型训练<br>
+      • 模型评估与转换<br>
+      • 模型推理与集成<br>
+      • 已适配模型<br>
+    </td>
+  </tr>
+</table>
+
+**查看项目** → [AMD-YES Pipeline](./05-AMD-YES-Pipeline/README.md)
+
+
 ## Contributing
 
 我们欢迎所有形式的贡献！无论是：
