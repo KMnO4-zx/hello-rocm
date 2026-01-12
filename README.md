@@ -32,95 +32,89 @@
 
 ```
 hello-rocm/
-├── 01-Infra/              # ROCm 算子优化
-├── 02-Inference/          # ROCm 推理优化
-├── 03-Training/           # 模型训练与微调
-└── 04-AMD-YES/            # 优秀 AMD 项目收录
+├── 01-Deploy/              # ROCm 大模型部署实践
+├── 02-Fine-tune/           # ROCm 大模型微调实践
+├── 03-AMD-YES/             # AMD 实践案例集合
+└── 04-Infra/               # Rocm 算子优化实践
+└── 05-References/          # Rocm 优质参考资料
 ```
 
 
 ## Modules
 
-### 01. Infra - ROCm 算子优化
+### 01. Deploy - ROCm 大模型部署
 <table align="center">
   <tr>
     <td valign="top" width="50%">
       <b>核心内容</b><br>
-      • ROCm 基础架构<br>
-      • HIP 编程入门<br>
-      • 自定义算子开发<br>
-      • 性能分析与优化<br>
-      • Composable Kernel (CK) 实践
+      • LM Studio 零基础大模型部署<br>
+      • Vllm 零基础大模型部署<br>
+      • SGLong 零基础大模型部署<br>
+      • ATOM 零基础大模型部署<br>
     </td>
   </tr>
 </table>
 
-**入门教程** → [Getting Started with ROCm Infra](./01-Infra/README.md)
+**入门教程** → [Getting Started with ROCm Deploy](./01-Deploy/README.md)
 
-### 02. Inference - ROCm 推理优化
+### 02. Fine-tune - ROCm 大模型微调实践
 <table align="center">
   <tr>
     <td valign="top" width="50%">
       <b>核心内容</b><br>
-      • 模型格式转换<br>
-      • vLLM / TGI on ROCm<br>
-      • 量化技术 (GPTQ, AWQ, GGUF)<br>
-      • LM Studio / Ollama 集成<br>
-      • 推理性能调优
+      • 大模型零基础微调教程<br>
+      • 大模型单机微调脚本<br>
+      • 大模型多机多卡微调教程<br>
     </td>
   </tr>
 </table>
 
-**入门教程** → [Getting Started with ROCm Inference](./02-Inference/README.md)
+**入门教程** → [Getting Started with ROCm Fine-tune](./02-Fine-tune/README.md)
 
-### 03. Training - 模型训练与微调
+### 03. AMD-YES - AMD 实践案例集合
 <table align="center">
   <tr>
     <td valign="top" width="50%">
       <b>核心内容</b><br>
-      • 单卡/多卡微调 (LoRA, QLoRA)<br>
-      • 全量训练最佳实践<br>
-      • 分布式训练 (RCCL)<br>
-      • 集群部署与通信<br>
-      • 训练性能优化
+      • AMchat-高等数学<br>
+      • Chat-嬛嬛<br>
+      • Tianji-天机<br>
+      • 数字生命<br>
+      • happy-llm<br>
     </td>
   </tr>
 </table>
 
-**入门教程** → [Getting Started with ROCm Training](./03-Training/README.md)
+**入门教程** → [Getting Started with ROCm AMD-YES](./03-AMD-YES/README.md)
 
-### 04. AMD-YES Project - 优秀项目收录
+### 04. Infra - Rocm 算子优化实践
 <table align="center">
   <tr>
     <td valign="top" width="50%">
       <b>核心内容</b><br>
-      • 社区优秀 ROCm 项目<br>
-      • 工具与框架推荐<br>
-      • 成功案例分享<br>
-      • 贡献者作品展示
+      • HIPify 自动化迁移实战<br>
+      • BLAS 与 DNN 的无缝切换<br>
+      • NCCL 到 RCCL 的迁移<br>
+      • Nsight 到 Rocprof 的映射
     </td>
   </tr>
 </table>
 
-**查看项目** → [AMD-YES Project Gallery](./04-AMD-YES/README.md)
+**查看项目** → [Getting Started with ROCm Infra](.04-Infra/README.md)
 
 
-### 05. AMD-YES Pipeline - 产线全流程
+### 05. References - Rocm 优质参考资料
 <table align="center">
   <tr>
     <td valign="top" width="50%">
       <b>核心内容</b><br>
-      • 模型快速体验<br>
-      • 模型数据准备<br>
-      • 模型模型训练<br>
-      • 模型评估与转换<br>
-      • 模型推理与集成<br>
-      • 已适配模型<br>
+      • AMD 参考资料<br>
+      • 相关新闻<br>
     </td>
   </tr>
 </table>
 
-**查看项目** → [AMD-YES Pipeline](./05-AMD-YES-Pipeline/README.md)
+**查看项目** → [ROCm References](./05-References/README.md)
 
 
 ## Contributing
