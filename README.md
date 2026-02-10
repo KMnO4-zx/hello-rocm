@@ -68,31 +68,33 @@ hello-rocm/
 
 ### 01. Deploy - ROCm 大模型部署
 
-<p align="left">
+<p align="center">
+  <strong>🚀 ROCm 大模型部署实践</strong><br>
+  <em>零基础快速上手 AMD GPU 大模型部署</em><br>
   📖 <strong><a href="./01-Deploy/README.md">Getting Started with ROCm Deploy</a></strong>
 </p>
 
-<table align="left" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="100%" align="left" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;">
       • LM Studio 零基础大模型部署<br>
       • vLLM 零基础大模型部署<br>
       • Ollama 零基础大模型部署<br>
-      • llamacpp 零基础大模型部署<br>
+      • llama.cpp 零基础大模型部署<br>
       • ATOM 零基础大模型部署
     </td>
   </tr>
 </table>
 
-<br>
-
 ### 02. Fine-tune - ROCm 大模型微调
 
-<p align="left">
+<p align="center">
+  <strong>🔧 ROCm 大模型微调实践</strong><br>
+  <em>在 AMD GPU 上进行高效模型微调</em><br>
   📖 <strong><a href="./02-Fine-tune/README.md">Getting Started with ROCm Fine-tune</a></strong>
 </p>
 
-<table align="left" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
     <td valign="top" width="50%" style="border: none !important;">
       • 大模型零基础微调教程<br>
@@ -102,15 +104,15 @@ hello-rocm/
   </tr>
 </table>
 
-<br>
-
 ### 03. AMD-YES - AMD 实践案例集合
 
-<p align="left">
+<p align="center">
+  <strong>✨ AMD 实践案例集合</strong><br>
+  <em>社区驱动的 AMD GPU 项目实践</em><br>
   📖 <strong><a href="./03-AMD-YES/README.md">Getting Started with ROCm AMD-YES</a></strong>
 </p>
 
-<table align="left" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
     <td valign="top" width="50%" style="border: none !important;">
       • toy-cli - LLM 轻量化终端助手<br>
@@ -121,15 +123,15 @@ hello-rocm/
   </tr>
 </table>
 
-<br>
-
 ### 04. Infra - ROCm 算子优化
 
-<p align="left">
+<p align="center">
+  <strong>⚙️ ROCm 算子优化实践</strong><br>
+  <em>CUDA 到 ROCm 的迁移与优化指南</em><br>
   📖 <strong><a href="./04-Infra/README.md">Getting Started with ROCm Infra</a></strong>
 </p>
 
-<table align="left" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
     <td valign="top" width="50%" style="border: none !important;">
       • HIPify 自动化迁移实战<br>
@@ -140,15 +142,15 @@ hello-rocm/
   </tr>
 </table>
 
-<br>
-
 ### 05. References - ROCm 优质参考资料
 
-<p align="left">
+<p align="center">
+  <strong>📚 ROCm 优质参考资料</strong><br>
+  <em>精选的 AMD 官方与社区资源</em><br>
   📖 <strong><a href="./05-References/README.md">ROCm References</a></strong>
 </p>
 
-<table align="left" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
     <td valign="top" width="50%" style="border: none !important;">
       • <a href="https://rocm.docs.amd.com/">ROCm 官方文档</a><br>
