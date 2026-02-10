@@ -76,7 +76,7 @@ hello-rocm/
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • LM Studio 零基础大模型部署<br>
       • vLLM 零基础大模型部署<br>
       • Ollama 零基础大模型部署<br>
@@ -96,7 +96,7 @@ hello-rocm/
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • 大模型零基础微调教程<br>
       • 大模型单机微调脚本<br>
       • 大模型多机多卡微调教程
@@ -114,7 +114,7 @@ hello-rocm/
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • toy-cli - LLM 轻量化终端助手<br>
       • YOLOv10 微信跳一跳 - 游戏 AI 实战<br>
       • Chat-甄嬛 - 古风对话大模型<br>
@@ -133,7 +133,7 @@ hello-rocm/
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • HIPify 自动化迁移实战<br>
       • BLAS 与 DNN 的无缝切换<br>
       • NCCL 到 RCCL 的迁移<br>
@@ -152,7 +152,7 @@ hello-rocm/
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%" style="border: none !important;">
+    <td valign="top" width="100%" align="center" style="border: none !important;">
       • <a href="https://rocm.docs.amd.com/">ROCm 官方文档</a><br>
       • <a href="https://github.com/amd">AMD GitHub</a><br>
       • <a href="https://rocm.docs.amd.com/en/latest/about/release-notes.html">ROCm Release Notes</a><br>
