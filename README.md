@@ -74,14 +74,13 @@ hello-rocm/
   📖 <strong><a href="./01-Deploy/README.md">Getting Started with ROCm Deploy</a></strong>
 </p>
 
-<table align="center">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • LM Studio 零基础大模型部署<br>
-      • Vllm 零基础大模型部署<br>
-    </td>
-    <td valign="top" width="50%">
-      • SGLang 零基础大模型部署<br>
+      • vLLM 零基础大模型部署<br>
+      • Ollama 零基础大模型部署<br>
+      • llama.cpp 零基础大模型部署<br>
       • ATOM 零基础大模型部署
     </td>
   </tr>
@@ -95,13 +94,11 @@ hello-rocm/
   📖 <strong><a href="./02-Fine-tune/README.md">Getting Started with ROCm Fine-tune</a></strong>
 </p>
 
-<table align="center">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • 大模型零基础微调教程<br>
       • 大模型单机微调脚本<br>
-    </td>
-    <td valign="top" width="50%">
       • 大模型多机多卡微调教程
     </td>
   </tr>
@@ -115,16 +112,13 @@ hello-rocm/
   📖 <strong><a href="./03-AMD-YES/README.md">Getting Started with ROCm AMD-YES</a></strong>
 </p>
 
-<table align="center">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%">
-      • AMchat-高等数学<br>
-      • Chat-嬛嬛<br>
-      • Tianji-天机<br>
-    </td>
-    <td valign="top" width="50%">
-      • 数字生命<br>
-      • happy-llm
+    <td valign="top" width="50%" style="border: none !important;" align="center">
+      • toy-cli - LLM 轻量化终端助手<br>
+      • YOLOv10 微信跳一跳 - 游戏 AI 实战<br>
+      • Chat-甄嬛 - 古风对话大模型<br>
+      • happy-llm - 分布式大模型训练
     </td>
   </tr>
 </table>
@@ -137,13 +131,11 @@ hello-rocm/
   📖 <strong><a href="./04-Infra/README.md">Getting Started with ROCm Infra</a></strong>
 </p>
 
-<table align="center">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%">
+    <td valign="top" width="50%" style="border: none !important;" align="center">
       • HIPify 自动化迁移实战<br>
       • BLAS 与 DNN 的无缝切换<br>
-    </td>
-    <td valign="top" width="50%">
       • NCCL 到 RCCL 的迁移<br>
       • Nsight 到 Rocprof 的映射
     </td>
@@ -158,13 +150,11 @@ hello-rocm/
   📖 <strong><a href="./05-References/README.md">ROCm References</a></strong>
 </p>
 
-<table align="center">
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: none !important;">
   <tr>
-    <td valign="top" width="50%">
+    <td valign="top" width="100%" align="center" style="border: none !important;">
       • <a href="https://rocm.docs.amd.com/">ROCm 官方文档</a><br>
       • <a href="https://github.com/amd">AMD GitHub</a><br>
-    </td>
-    <td valign="top" width="50%">
       • <a href="https://rocm.docs.amd.com/en/latest/about/release-notes.html">ROCm Release Notes</a><br>
       • 相关新闻
     </td>
