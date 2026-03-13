@@ -20,7 +20,7 @@
 ----------------
 windows 22.04
 python 3.12
-rocm 7.2.0
+rocm 7.11.0
 pytorch 2.9.1
 ----------------
 ```
@@ -33,13 +33,8 @@ python -m pip install --upgrade pip
 
 # 安装ROCm相关依赖 包含 torch torchvision torchaudio等核心库
 # 以 Ryzen AI 系列为例 
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/rocm_sdk_core-7.2.0.dev0-py3-none-win_amd64.whl"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/rocm_sdk_devel-7.2.0.dev0-py3-none-win_amd64.whl"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/rocm_sdk_libraries_custom-7.2.0.dev0-py3-none-win_amd64.whl"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/rocm-7.2.0.dev0.tar.gz"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/torch-2.9.1+rocmsdk20260116-cp312-cp312-win_amd64.whl"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/torchvision-0.24.1+rocmsdk20260116-cp312-cp312-win_amd64.whl"
-python -m pip install --no-cache-dir "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a/torchaudio-2.9.0+rocmsdk20251116-cp312-cp312-win_amd64.whl"
+python -m pip install --index-url https://repo.amd.com/rocm/whl/gfx1151/ "rocm[libraries,devel]"
+python -m pip install --index-url https://repo.amd.com/rocm/whl/gfx1151/ torch torchvision torchaudio
 
 # 更换 pypi 源加速库的安装
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -48,7 +43,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip install -r requirements_rocm_windows.txt
 ```
 
-> 本项目使用 Ryzen AI MAX 395/370 运行测试，其他 Radeon 系列适配情况请参考 [支持列表](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/compatibility/compatibilityryz/windows/windows_compatibility.html)
+> 本项目使用 Ryzen AI MAX 395/370 运行测试，其他 Radeon 系列适配情况请查看 https://rocm.docs.amd.com/en/7.11.0-preview/rocm-for-ai/pytorch-comfyui.html
 
 ### 安装 ADB 工具
 

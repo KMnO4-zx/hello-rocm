@@ -97,7 +97,7 @@
 
 ### 🚀 happy-llm
 
-[Happy-LLM](https://github.com/datawhalechina/happy-llm) - 从零训练大模型 | [📖 详细文档](./06-happy-llm/README.md)
+[Happy-LLM](https://github.com/datawhalechina/happy-llm) - 从零训练大模型 | [📖 详细文档](./04-happy-llm/README.md)
 
 - 分布式多机多卡训练完整教程
 - 大模型核心原理深度剖析
