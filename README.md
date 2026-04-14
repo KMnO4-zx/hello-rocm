@@ -42,19 +42,15 @@
     <td colspan="4" align="center" style="border: none !important;"><strong>Qwen3</strong></td>
   </tr>
   <tr>
-    <td valign="top" width="25%" style="border: none !important;">
-      • <a href="./01-Deploy/models/Qwen3/env-prepare-ubuntu24-rocm7.md">推理环境准备</a><br>
+    <td valign="top" width="50%" style="border: none !important;">
+      • <a href="./01-Deploy/models/Qwen3/env-prepare-ubuntu24-rocm7.md">环境准备</a><br>
       • <a href="./01-Deploy/models/Qwen3/Ubuntu24.04-rocm7-infer-deploy.md">推理部署总览</a><br>
-    </td>
-    <td valign="top" width="25%" style="border: none !important;">
       • <a href="./01-Deploy/models/Qwen3/lm-studio-rocm7-deploy.md">LM Studio部署</a><br>
       • <a href="./01-Deploy/models/Qwen3/vllm-rocm7-deploy.md">vLLM部署</a><br>
-    </td>
-    <td valign="top" width="25%" style="border: none !important;">
-      • <a href="./01-Deploy/models/Qwen3/ollama-rocm7-deploy.md">Ollama部署</a><br>
+       • <a href="./01-Deploy/models/Qwen3/ollama-rocm7-deploy.md">Ollama部署</a><br>
       • <a href="./01-Deploy/models/Qwen3/llamacpp-rocm7-deploy.md">llama.cpp部署</a><br>
     </td>
-    <td valign="top" width="25%" style="border: none !important;">
+    <td valign="top" width="50%" style="border: none !important;">
       • <a href="./02-Fine-tune/models/Qwen3/01-Qwen3-0.6B-LoRA及SwanLab可视化记录.md">Qwen3-0.6B LoRA微调</a><br>
       • <a href="./02-Fine-tune/models/Qwen3/01-Qwen3-8B-LoRA.ipynb">Qwen3-8B LoRA微调</a><br>
     </td>
@@ -226,7 +222,7 @@ hello-rocm/
 * 分享你的 AMD 项目
 * 提出建议与想法
 
-&emsp;&emsp;请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解详情。
+&emsp;&emsp;参与前请先阅读 **[规范指南](./规范指南.md)**（目录、命名、配图与文档结构与 **Qwen3** 等教程对齐），再阅读 **[CONTRIBUTING.md](./CONTRIBUTING.md)**（Issue / PR 流程与模型专项目录约定）。
 
 &emsp;&emsp;想要深度参与的同学可以联系我们，我们会将你加入到项目的维护者中。
 
