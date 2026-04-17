@@ -92,28 +92,15 @@
 ### 硬件要求
 
 - **GPU**：AMD RDNA 2/3 系列（如 RX 6700 XT、RX 7900 XTX）或 MI 系列（如 MI300X）
-- **显存**：建议 16GB+ 以上（8GB 可运行小模型）
-- **系统内存**：32GB+ 推荐
-- **存储空间**：100GB+（用于模型和数据集）
+- **显存**：建议 64GB+ 以上
+- **系统内存**：128GB+ 推荐
+- **存储空间**：300GB+（用于模型和数据集）
 
 ### 软件要求
 
 - **操作系统**：Linux (Ubuntu 22.04 LTS / 24.04 LTS 推荐)
-- **ROCm 版本**：7.2.0 或更高版本
-- **Python 版本**：3.10+
-- **CUDA/HIP 编译工具链**：rocm-developer-tools
-
-### 依赖库
-
-核心依赖包括：
-- PyTorch 2.3+ (ROCm 版本)
-- Transformers 4.36+
-- DeepSpeed 0.13+
-- PEFT (参数高效微调)
-- Datasets
-- Accelerate
-
-详细安装指南请查看 [环境准备文档](./docs/environment-setup.md)
+- **ROCm 版本**：7.12.0 或更高版本
+- **Python 版本**：3.10~3.12
 
 ---
 
@@ -122,20 +109,22 @@
 ### 第一步：环境准备
 
 ```bash
-# 1. 克隆或复制本项目
 cd 04-happy-llm
 
-# 2. 创建 Python 虚拟环境
-python3.10 -m venv venv
-source venv/bin/activate
+# 升级pip
+python -m pip install --upgrade pip
 
-# 3. 安装 ROCm 相关依赖
-bash code/install_rocm_deps.sh
+# 安装 rocm 以及 rocm 版本的 torch torchvision torchaudio
+# 本次测试使用的是 4*AMD Radeon™ AI PRO R9700 架构为 gfx1201 如果为其他架构请自行下载
+pip install --index-url https://repo.amd.com/rocm/whl/gfx120X-all/ "rocm[libraries,devel]"
+pip install --index-url https://repo.amd.com/rocm/whl/gfx120X-all/ torch torchvision torchaudio
 
-# 4. 安装项目依赖
-pip install -r chapter5/code/requirements.txt
-pip install -r chapter6/code/requirements.txt
+# 安装项目依赖
+pip install -r ./chapter5/code/requirements.txt
+pip install -r ./chapter6/code/requirements.txt
 ```
+
+> 本项目使用 4*AMD Radeon™ AI PRO R9700 运行测试，其他 Instinct/Radeon PRO/Radeon/Ryzen 系列适配情况请查看 https://rocm.docs.amd.com/en/7.12.0-preview/compatibility/compatibility-matrix.html
 
 ### 第二步：选择学习路径
 
@@ -154,11 +143,9 @@ pip install -r chapter6/code/requirements.txt
 ```bash
 # 运行第五章模型实现示例
 cd chapter5/code
-python k_model.py
 
 # 运行第六章预训练脚本
-cd ../../chapter6/code
-bash pretrain.sh
+cd chapter6/code
 ```
 
 ---
@@ -184,35 +171,6 @@ bash pretrain.sh
 | **梯度累积** | 增大有效批大小 |
 | **混合精度训练** | 降低显存占用 |
 
----
-
-## 性能参考
-
-### 第五章（纯 PyTorch 实现）
-
-在 AMD MI300X (192GB HBM) 上的性能参考：
-
-| 模型 | 显存占用 | 训练速度 | 备注 |
-|------|--------|--------|------|
-| LLaMA2-7B | ~14GB | ~150 tokens/s | 单卡，fp32 |
-| LLaMA2-7B | ~7GB | ~200 tokens/s | 单卡，bf16 混合精度 |
-| LLaMA2-13B | ~26GB | ~100 tokens/s | 单卡，bf16 |
-
-> 注：实际性能取决于具体硬件配置、模型实现和超参数设置
-
-### 第六章（Transformers + DeepSpeed）
-
-在 2×MI300X (384GB HBM) 上的性能参考：
-
-| 模型 | 显存/卡 | 训练速度 | 并行方式 |
-|------|--------|--------|--------|
-| Qwen-7B | ~20GB | ~500 tokens/s | DDP + ZeRO-2 |
-| Llama-13B | ~35GB | ~350 tokens/s | DDP + ZeRO-2 |
-| Qwen-32B | ~40GB | ~200 tokens/s | DDP + ZeRO-3 |
-
-> 实际运行结果需在你的服务器上进行性能基准测试
-
----
 
 ## 常见问题
 
@@ -233,12 +191,12 @@ bash pretrain.sh
    export HSA_OVERRIDE_GFX_VERSION=gfx90a  # 对某些 GPU 可能需要
    ```
 
-3. 重新安装 PyTorch ROCm 版本：
+3. 重新安装 PyTorch ROCm 版本，注意 gpu 对应架构：
    ```bash
-   pip install torch torchvision torchaudio --index-url https://repo.amd.com/rocm/whl/11.8
+   pip install torch torchvision torchaudio --index-url https://repo.amd.com/rocm/whl/gfx120X-all/
    ```
 
-4. 如果问题仍存在，请查看 [ROCm 官方故障排除指南](https://rocm.docs.amd.com/en/docs-7.2.0/deploy/linux/index.html)
+4. 如果问题仍存在，请查看 [ROCm 官方指南](https://rocm.docs.amd.com/en/7.12.0-preview/compatibility/compatibility-matrix.html)
 
 </details>
 
@@ -326,49 +284,7 @@ bash pretrain.sh
 ## 项目结构
 
 ```
-04-happy-llm/
-├── README.md                      # 项目总览（本文件）
-├── chapter5/                      # 第五章：动手搭建大模型
-│   ├── README.md                  # 章节指南
-│   ├── 5.1-模型结构设计.md       # LLaMA2 核心组件
-│   ├── 5.2-预训练与微调.md       # 完整训练流程
-│   └── code/                      # 实现代码
-│       ├── k_model.py             # LLaMA2 完整模型实现
-│       ├── model_config.py        # 模型配置
-│       ├── dataset.py             # 数据加载器
-│       ├── pretrain.py            # 预训练脚本
-│       ├── finetune.py            # 微调脚本
-│       ├── requirements.txt        # 依赖包列表
-│       └── tokenizer_k/           # 自定义分词器
-├── chapter6/                      # 第六章：大模型训练流程实践
-│   ├── README.md                  # 章节指南
-│   ├── 6.1-框架与基础.md         # Transformers 框架讲解
-│   ├── 6.2-预训练实践.md         # 分布式预训练
-│   ├── 6.3-微调实践.md           # 参数高效微调
-│   ├── 6.4-偏好对齐.md           # RLHF 和 DPO
-│   └── code/                      # 实现代码
-│       ├── download_model.py      # 模型下载脚本
-│       ├── download_dataset.py    # 数据集下载脚本
-│       ├── pretrain.py            # 预训练脚本
-│       ├── pretrain.sh            # 预训练执行脚本
-│       ├── finetune.py            # 微调脚本
-│       ├── finetune.sh            # 微调执行脚本
-│       ├── ds_config_zero2.json   # DeepSpeed ZeRO-2 配置
-│       ├── requirements.txt        # 依赖包列表
-│       └── notebooks/             # Jupyter 交互式教程
-├── code/                          # 共用工具和脚本
-│   ├── install_rocm_deps.sh       # 一键安装 ROCm 依赖（Linux）
-│   ├── setup_environment.sh       # 环境配置脚本
-│   ├── performance_benchmark.py   # 性能基准测试
-│   └── README.md                  # 工具使用说明
-├── images/                        # 文档图片（运行结果、截图等）
-│   ├── chapter5_training.png      # 第五章训练曲线
-│   ├── chapter6_multi_gpu.png     # 多卡训练监控
-│   └── ...
-└── docs/                          # 补充文档
-    ├── environment-setup.md       # 详细的环境搭建指南
-    ├── rocm-troubleshooting.md    # ROCm 故障排除
-    └── performance-tuning.md      # 性能调优指南
+
 ```
 
 ---
@@ -377,6 +293,7 @@ bash pretrain.sh
 
 - 📚 [Happy-LLM 原始项目](https://github.com/datawhalechina/happy-llm)
 - 📖 [ROCm 官方文档](https://rocm.docs.amd.com/)
+- 📖 [ROCm 官方 preview 文档](https://rocm.docs.amd.com/en/7.12.0-preview/index.html)
 - 🤗 [Hugging Face Transformers](https://huggingface.co/docs/transformers)
 - ⚡ [DeepSpeed 官方文档](https://www.deepspeed.ai/)
 - 🔧 [PyTorch 官方文档](https://pytorch.org/docs/)

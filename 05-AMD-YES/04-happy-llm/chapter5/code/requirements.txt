@@ -1,37 +1,22 @@
-# 第五章：动手搭建大模型 - 项目依赖
-
-# 核心 ML 框架
-torch==2.3.0+rocm7.2
-torchvision==0.18.0
-torchaudio==2.3.0
-numpy>=1.24.0
-
-# 分词和模型
-transformers==4.36.0
-tokenizers>=0.14.0
-sentencepiece>=0.1.99
-
-# 数据处理
-datasets==2.14.0
-pandas>=2.0.0
-tqdm>=4.66.0
-
-# 工具和优化
-peft==0.7.0  # LoRA 等参数高效微调
-accelerate==0.24.0
-bitsandbytes>=0.41.0  # 量化相关
-
-# 监控和日志
-tensorboard>=2.13.0
-wandb>=0.15.0
-python-dotenv>=1.0.0
-
-# 开发工具（可选）
-jupyter>=1.0.0
-ipython>=8.0.0
-ipywidgets>=8.0.0
-
-# 文档和类型检查（可选）
-black>=23.0.0
-flake8>=6.0.0
-mypy>=1.0.0
+datasets==2.16.1
+jsonlines==4.0.0
+marshmallow==3.22.0
+matplotlib==3.5.1
+ngrok==1.4.0
+nltk==3.8
+numpy==1.26.4
+openai==1.42.0
+pandas
+psutil==5.9.8
+pydantic==2.8.2
+rich==13.7.1
+scikit_learn==1.5.1
+sentence_transformers==2.3.1
+simhash==2.1.2
+tiktoken
+transformers==4.44.0
+jinja2==3.1.2
+trl==0.11.3
+ujson==5.1.0
+swanlab
+modelscope

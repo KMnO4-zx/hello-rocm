@@ -1,219 +1,257 @@
-"""
-第六章 - 预训练脚本占位符
+'''
+预训练脚本
+'''
 
-本脚本使用 Transformers Trainer API 进行模型预训练。
-
-说明：
-- 支持单卡和多卡 DDP 训练
-- 支持 DeepSpeed 优化
-- 支持混合精度和梯度检查点
-- 支持模型和数据的 Hub 上传
-"""
-
+import logging
+import math
 import os
-import torch
+import sys
 from dataclasses import dataclass, field
-from typing import Optional
+from torchdata.datapipes.iter import IterableWrapper
+from itertools import chain
+import deepspeed
+from typing import Optional,List
+
+import datasets
+import pandas as pd
+import torch
+from datasets import load_dataset
+import transformers
 from transformers import (
+    AutoConfig,
     AutoModelForCausalLM,
     AutoTokenizer,
-    TrainingArguments,
+    HfArgumentParser,
     Trainer,
-    DataCollatorForLanguageModeling,
+    TrainingArguments,
+    default_data_collator,
+    set_seed,
 )
-from datasets import load_dataset, concatenate_datasets
+import datetime
+from transformers.testing_utils import CaptureLogger
+from transformers.trainer_utils import get_last_checkpoint
+import swanlab
 
 
-# ============================================================================
-# 配置类
-# ============================================================================
+logger = logging.getLogger(__name__)
+
+
+# 超参类
+@dataclass
+class ModelArguments:
+    """
+    关于模型的参数
+    """
+
+    model_name_or_path: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": (
+                "后训练使用，为预训练模型参数地址"
+            )
+        },
+    )
+    config_name: Optional[str] = field(
+        default=None, metadata={"help": "预训练使用，Config 文件地址"}
+    )
+    tokenizer_name: Optional[str] = field(
+        default=None, metadata={"help": "预训练 Tokenizer 地址"}
+    )
+    torch_dtype: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": (
+                "模型训练使用的数据类型，推荐 bfloat16"
+            ),
+            "choices": ["auto", "bfloat16", "float16", "float32"],
+        },
+    )
+
 
 @dataclass
-class PretrainConfig:
-    """预训练配置"""
-    
-    # 模型和数据
-    model_name_or_path: str = "Qwen/Qwen2.5-1.5B"
-    dataset_name: str = "wikitext"
-    dataset_config: str = "wikitext-103-v1"
-    output_dir: str = "./outputs/pretrain"
-    
-    # 训练参数
-    num_train_epochs: int = 1
-    per_device_train_batch_size: int = 4
-    per_device_eval_batch_size: int = 8
-    gradient_accumulation_steps: int = 1
-    learning_rate: float = 2e-4
-    weight_decay: float = 0.01
-    warmup_steps: int = 500
-    max_steps: int = -1
-    
-    # 优化参数
-    bf16: bool = True  # 混合精度
-    gradient_checkpointing: bool = False
-    max_grad_norm: float = 1.0
-    
-    # DeepSpeed
-    deepspeed: Optional[str] = None  # DeepSpeed 配置文件路径
-    
-    # 分布式
-    ddp_find_unused_parameters: bool = False
-    
-    # 保存和日志
-    save_strategy: str = "steps"
-    save_steps: int = 500
-    save_total_limit: int = 3
-    logging_strategy: str = "steps"
-    logging_steps: int = 100
-    eval_strategy: str = "steps"
-    eval_steps: int = 500
-    
-    # 其他
-    seed: int = 42
-    local_rank: int = -1
-    dataloader_num_workers: int = 4
-
-
-# ============================================================================
-# 数据加载函数
-# ============================================================================
-
-def load_and_process_dataset(config: PretrainConfig, tokenizer):
+class DataTrainingArguments:
     """
-    加载和处理数据集
-    
-    处理流程：
-    1. 从 Hugging Face 加载数据集
-    2. 分词处理
-    3. 分割成 max_length 的样本
-    4. 返回 train/val 数据集
-    
-    说明：
-    - 支持本地文件和 Hub 上的数据集
-    - 包含数据缓存机制
+    关于训练的参数
     """
-    
-    # 实现应该包括：
-    # 1. 使用 load_dataset 加载数据
-    # 2. 定义 tokenize 函数
-    # 3. 应用 map 函数处理数据
-    # 4. 按比例划分 train/val
-    
-    print("数据加载和处理实现...")
-    pass
 
-
-def create_data_collator(tokenizer):
-    """
-    创建数据 collator
-    
-    用于：
-    - 对齐序列长度
-    - 构造因果语言模型的 labels
-    - 应用 token masking
-    """
-    return DataCollatorForLanguageModeling(
-        tokenizer=tokenizer,
-        mlm=False  # 因果 LM，不需要 MLM
+    train_files: Optional[List[str]]  = field(default=None, metadata={"help": "训练数据路径"})
+    block_size: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": (
+                "设置的文本块长度"
+            )
+        },
+    )
+    preprocessing_num_workers: Optional[int] = field(
+        default=None,
+        metadata={"help": "预处理使用线程数."},
     )
 
-
-# ============================================================================
-# 训练函数
-# ============================================================================
-
+                
 def main():
-    """主训练函数"""
+
+    # 加载脚本参数
+    parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
+    model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+
+    # 初始化 SwanLab
+    # swanlab.init(project="pretrain", experiment_name="from_scrach")
     
-    # 1. 配置和初始化
-    print("="*50)
-    print("LLM 预训练开始")
-    print("="*50)
-    
-    config = PretrainConfig()
-    
-    # 设置随机种子
-    torch.manual_seed(config.seed)
-    
-    # 2. 加载模型和分词器
-    print(f"\n加载模型: {config.model_name_or_path}")
-    model = AutoModelForCausalLM.from_pretrained(
-        config.model_name_or_path,
-        trust_remote_code=True,
+    # 设置日志
+    logging.basicConfig(
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        datefmt="%m/%d/%Y %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)],
     )
-    tokenizer = AutoTokenizer.from_pretrained(
-        config.model_name_or_path,
-        trust_remote_code=True,
+
+    # 将日志级别设置为 INFO
+    transformers.utils.logging.set_verbosity_info()
+    log_level = training_args.get_process_log_level()
+    logger.setLevel(log_level)
+    datasets.utils.logging.set_verbosity(log_level)
+    transformers.utils.logging.set_verbosity(log_level)
+    transformers.utils.logging.enable_default_handler()
+    transformers.utils.logging.enable_explicit_format()
+
+    # 训练整体情况记录
+    logger.warning(
+        f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
+        + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
     )
+    logger.info(f"Training/evaluation parameters {training_args}")
+
+    # 检查 checkpoint
+    last_checkpoint = None
+    if os.path.isdir(training_args.output_dir):
+        last_checkpoint = get_last_checkpoint(training_args.output_dir)
+        if last_checkpoint is None and len(os.listdir(training_args.output_dir)) > 0:
+            raise ValueError(
+                f"输出路径 ({training_args.output_dir}) 非空 "
+            )
+        elif last_checkpoint is not None and training_args.resume_from_checkpoint is None:
+            logger.info(
+                f"从 {last_checkpoint}恢复训练"
+            )
+
+    # 设置随机数种子.
+    set_seed(training_args.seed)
+
+    # 初始化模型
+    if model_args.config_name is not None:
+        # from scrach
+        config = AutoConfig.from_pretrained(model_args.config_name)
+        logger.warning("你正在从零初始化一个模型")
+        logger.info(f"模型参数配置地址：{model_args.config_name}")
+        logger.info(f"模型参数：{config}")
+        model = AutoModelForCausalLM.from_config(config,trust_remote_code=True)
+        n_params = sum({p.data_ptr(): p.numel() for p in model.parameters()}.values())
+        logger.info(f"预训练一个新模型 - Total size={n_params/2**20:.2f}M params")
+    elif model_args.model_name_or_path is not None:
+        logger.warning("你正在初始化一个预训练模型")
+        logger.info(f"模型参数地址：{model_args.model_name_or_path}")
+        model = AutoModelForCausalLM.from_pretrained(model_args.model_name_or_path,trust_remote_code=True)
+        n_params = sum({p.data_ptr(): p.numel() for p in model.parameters()}.values())
+        logger.info(f"继承一个预训练模型 - Total size={n_params/2**20:.2f}M params")
+    else:
+        logger.error("config_name 和 model_name_or_path 不能均为空")
+        raise ValueError("config_name 和 model_name_or_path 不能均为空")
+
+    # 初始化 Tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_args.tokenizer_name)
+    logger.info("完成 tokenzier 加载")
+    logger.info(f"tokenzier 配置地址：{model_args.tokenizer_name}")
+
+    # 加载预训练数据
+    ds = load_dataset('json', data_files=data_args.train_files)
+    logger.info("完成训练集加载")
+    logger.info(f"训练集地址：{data_args.train_files}")
+    logger.info(f'训练文件总数:{len(ds["train"])}')
+    # logger.info(f"训练集采样：{ds["train"][0]}")
+
+    # 文本 tokenize
+    column_names = list(ds["train"].features)
+    logger.info('训练集特征：', column_names)
+    text_column_name = "text" if "text" in column_names else column_names[0]
+
+    # tokenize 函数
+    def tokenize_function(examples):
+        output = tokenizer([item for item in examples[text_column_name]])
+        return output
+
+    # 仅主进程进行数据预处理
+    with training_args.main_process_first(desc="dataset map tokenization"):
+        tokenized_datasets = ds.map(
+            tokenize_function,
+            batched=True,
+            num_proc=data_args.preprocessing_num_workers,
+            remove_columns=column_names,
+            load_from_cache_file=True,
+            desc="Running tokenizer on dataset"
+        )
+
+    # 文本切块
+    if data_args.block_size is None:
+        block_size = tokenizer.model_max_length
+        if block_size > 1024:
+            logger.warning(
+                "tokenizer 支持大于 1K 的上下文长度，默认设置为 1K"
+            )
+            block_size = 1024
+    else:
+        if data_args.block_size > tokenizer.model_max_length:
+            logger.warning(
+                f"设定的块长为 ({data_args.block_size}) ，大于模型的上下文长度"
+                f"将块长设置为模型上下文长度：{tokenizer.model_max_length}."
+            )
+        block_size = min(data_args.block_size, tokenizer.model_max_length)
+
+    def group_texts(examples):
+        # 将文本段拼接起来
+        concatenated_examples = {k: list(chain(*examples[k])) for k in examples.keys()}
+        # 计算拼起来的整体长度
+        total_length = len(concatenated_examples[list(examples.keys())[0]])
+        # 如果长度太长，进行分块
+        if total_length >= block_size:
+            total_length = (total_length // block_size) * block_size
+        result = {
+            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
+            for k, t in concatenated_examples.items()
+        }    
+        result["labels"] = result["input_ids"].copy()
+        return result
+
+    with training_args.main_process_first(desc="文本分块"):
+        lm_datasets = tokenized_datasets.map(
+            group_texts,
+            batched=True,
+            num_proc=data_args.preprocessing_num_workers,
+            load_from_cache_file=True,
+            desc=f"文本分块到{block_size}",
+            batch_size = 40000,
+        )
+        logger.info("完成数据预处理")
+        train_dataset = lm_datasets["train"]
     
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-    
-    print(f"模型参数量: {model.num_parameters() / 1e9:.2f}B")
-    
-    # 3. 加载和处理数据集
-    print(f"\n加载数据集: {config.dataset_name}")
-    train_dataset = load_and_process_dataset(config, tokenizer)
-    eval_dataset = load_and_process_dataset(config, tokenizer)  # 应该用不同的部分
-    
-    # 4. 创建 data collator
-    data_collator = create_data_collator(tokenizer)
-    
-    # 5. 配置训练参数
-    training_args = TrainingArguments(
-        output_dir=config.output_dir,
-        num_train_epochs=config.num_train_epochs,
-        max_steps=config.max_steps,
-        per_device_train_batch_size=config.per_device_train_batch_size,
-        per_device_eval_batch_size=config.per_device_eval_batch_size,
-        gradient_accumulation_steps=config.gradient_accumulation_steps,
-        learning_rate=config.learning_rate,
-        weight_decay=config.weight_decay,
-        warmup_steps=config.warmup_steps,
-        max_grad_norm=config.max_grad_norm,
-        bf16=config.bf16,
-        gradient_checkpointing=config.gradient_checkpointing,
-        save_strategy=config.save_strategy,
-        save_steps=config.save_steps,
-        save_total_limit=config.save_total_limit,
-        logging_strategy=config.logging_strategy,
-        logging_steps=config.logging_steps,
-        eval_strategy=config.eval_strategy,
-        eval_steps=config.eval_steps,
-        dataloader_num_workers=config.dataloader_num_workers,
-        ddp_find_unused_parameters=config.ddp_find_unused_parameters,
-        seed=config.seed,
-        report_to=["tensorboard"],
-        logging_dir=f"{config.output_dir}/logs",
-        deepspeed=config.deepspeed,
-    )
-    
-    # 6. 创建 Trainer
+    logger.info("初始化 Trainer")
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        data_collator=data_collator,
+        train_dataset= IterableWrapper(train_dataset),
+        tokenizer=tokenizer,
+        data_collator=default_data_collator
     )
-    
-    # 7. 开始训练
-    print("\n开始训练...")
-    print("提示：")
-    print("- 监控 GPU 使用: watch rocm-smi")
-    print("- 查看日志: tensorboard --logdir ./outputs/pretrain/logs")
-    
-    trainer.train()
-    
-    # 8. 保存最终模型
-    print("\n保存最终模型...")
-    trainer.save_model(f"{config.output_dir}/final")
-    
-    print("\n"+"="*50)
-    print("预训练完成！")
-    print(f"模型已保存到: {config.output_dir}/final")
-    print("="*50)
 
+    # 从 checkpoint 加载
+    checkpoint = None
+    if training_args.resume_from_checkpoint is not None:
+        checkpoint = training_args.resume_from_checkpoint
+    elif last_checkpoint is not None:
+            checkpoint = last_checkpoint
+
+    logger.info("开始训练")
+    train_result = trainer.train(resume_from_checkpoint=checkpoint)
+    trainer.save_model() 
 
 if __name__ == "__main__":
     main()
