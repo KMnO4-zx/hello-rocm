@@ -19,6 +19,7 @@ chapter5/
 ├── 第五章 动手搭建大模型.md      # 章节详细教程
 ├── chapter5-hands-on-llm-building.md  # 英文教程
 ├── README.md                    # 本文件
+├── README_EN.md                 # 英文 README
 └── code/
     ├── 00_download_dataset.sh          # 步骤 0：下载数据集（Linux）
     ├── 00_windows_download_dataset.sh  # 步骤 0：下载数据集（Windows）

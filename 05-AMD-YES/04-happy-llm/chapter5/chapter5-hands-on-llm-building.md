@@ -957,6 +957,15 @@ def eval_tokenizer(tokenizer_path: str) -> None:
     encoded = tokenizer(prompt, truncation=True, max_length=256)
     decoded = tokenizer.decode(encoded["input_ids"], skip_special_tokens=False)
     print("Decoded text matches original:", decoded == prompt)
+
+    # Test special token handling
+    print("\n=== Special Token Handling ===")
+    test_text = "<|im_start|>user\nHello<|im_end|>"
+    encoded = tokenizer(test_text).input_ids
+    decoded = tokenizer.decode(encoded)
+    print(f"Original: {test_text}")
+    print(f"Decoded:  {decoded}")
+    print("Special tokens preserved:", decoded == test_text)
 ```
 
 ```python

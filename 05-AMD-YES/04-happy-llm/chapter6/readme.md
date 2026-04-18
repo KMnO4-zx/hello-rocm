@@ -23,6 +23,7 @@ chapter6/
 ├── chapter6-llm-training-workflow-practice.md  # 英文教程
 ├── chapter6-4-wip-preference-alignment.md      # 6.4 英文版
 ├── README.md                      # 本文件
+├── README_EN.md                   # 英文 README
 └── code/
     ├── 00_download_model.py        # 步骤 0：下载基座模型（Qwen2.5-1.5B）
     ├── 01_download_dataset.py      # 步骤 1a：下载数据集
